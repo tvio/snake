@@ -1,4 +1,5 @@
 # TODO negenerovat jidlo do ocasu
+#chyba pri rychlem sledu kl4aves to konci, i kdyz nenarazil2
 # udelat skore
 # udelat new game
 # dat text do vlastniho modulu
@@ -21,8 +22,6 @@ white = pygame.Color(255, 255, 255)
 pygame.display.set_caption('Had')
 windowClock = pygame.time.Clock()
 window = pygame.display.set_mode((windowW,windowH))
-#font = pygame.font.Font('freesansbold.ttf', 32)
-
 class grid():
    def __init__(self):
     self.sizex = windowW /width-1
@@ -116,7 +115,7 @@ class Run(object):
     height=60
     width=60
     smer='down'
-    speed=7
+    speed=3
     def __init__(self):
         self.Main()
     def nastavSmer(self,klavesa):
