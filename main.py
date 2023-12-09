@@ -1,4 +1,7 @@
-# zkusim primo pres spiretes classy, app  a dalsi
+# TODO negenerovat jidlo do ocasu
+# udelat skore
+# udelat new game
+# dat text do vlastniho modulu
 import pygame
 import random
 import time
@@ -38,9 +41,6 @@ class grid():
    def draw(self,gridx,gridy,color):
      x,y = grid.transform(self,'souradnice',gridx,gridy)
      pygame.draw.rect(window,color,pygame.Rect(x,y,width,height))
-   
-      
-
    def automove(self,smer,gridx,gridy):
        if smer == 'down':
           if gridy==self.sizey:
@@ -62,13 +62,8 @@ class grid():
             self.gridx=self.sizex;
          else:
           self.gridx= gridx-1    
-
-
        return(self.gridx,self.gridy,gridx,gridy)
-      
-      
 class Player(object):
-    
     def __init__(self,gridx,gridy, color):
           self.gridx = gridx
           self.gridy = gridy
@@ -81,9 +76,6 @@ class Player(object):
         self.gridx = gridx
         self.gridy = gridy
         grid.draw(self,self.gridx,self.gridy,self.color)
-           
-    
-     
 class Jidlo(Player):
     def __init__(self,gridx,gridy,color):
              super().__init__(gridx,gridy,color) 
@@ -111,9 +103,7 @@ class Vagon(Jidlo):
       elif smer=='up':
          self.gridy+=1         
       elif smer=='down':
-         self.gridy-=1   
-             
-      
+         self.gridy-=1    
    def draw(self):
       grid.draw(self,self.gridx,self.gridy,red)
    def aktualizujSouradnice(self,gridx,gridy):
@@ -171,7 +161,6 @@ class Run(object):
             vagony[i].nastavSouradnice(player1.gridx,player1.gridy,Run.smer)
            else:
             vagony[i].nastavSouradnice(vagony[i-1].gridx,vagony[i-1].gridy,Run.smer)
-        
         jidlo = Jidlo(random.randint(0,g.sizex),random.randint(0,g.sizey),self.random_color())
         wait = False
         pocetCekani = 0
@@ -190,7 +179,6 @@ class Run(object):
                   self.nastavSmer('up')
                if event.key == pygame.K_DOWN : 
                   self.nastavSmer('down')
-                    
          if jidlo.kontrolaKolize(player1.gridx,player1.gridy)==1:
             vagonPocet+=1
             vagony.append( Vagon (vagonPocet))
@@ -212,20 +200,16 @@ class Run(object):
          if wait:
           pocetCekani-=1
           if pocetCekani==0:
-            
             vagony[vagonPocet-1].gridx=vagony[len(vagony)-2].gridx
             vagony[vagonPocet-1].gridy=vagony[len(vagony)-2].gridy
             wait = False
-         
          #check crash
          for i in range(len(vagony)):
             if vagony[i].gridx  == player1.gridx and vagony[i].gridy == player1.gridy:
                self.game_over() 
-         
          player1.draw(player1.gridx,player1.gridy,Run.smer) 
          for i in range(len(vagony)):
           vagony[i].draw()            
-       
          jidlo.drawJidlo()
          pygame.display.update()
          player1.gridx,player1.gridy,player1.hgridx,player1.hgridy = g.automove(Run.smer,player1.gridx,player1.gridy)
@@ -235,9 +219,6 @@ class Run(object):
               vagony[i].gridy = player1.hgridy
             else: 
               vagony[i].aktualizujSouradnice(vagony[i-1].gridx,vagony[i-1].gridy)
-
          windowClock.tick(Run.speed)
-        
-
 Run()
 
