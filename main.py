@@ -1,5 +1,5 @@
 # TODO negenerovat jidlo do ocasu
-#chyba pri rychlem sledu kl4aves to konci, i kdyz nenarazil2
+#chyba pri rychlem sledu kl4aves to konci, i kdyz nenarazil2x
 # udelat skore
 # udelat new game
 # dat text do vlastniho modulu
