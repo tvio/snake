@@ -1,4 +1,5 @@
-# TODO negenerovat jidlo do ocasu
+# udelat reset game
+#zlepsit mackat aspon dve klavesy
 #chyba pri rychlem sledu kl4aves to konci, i kdyz nenarazil2x
 # udelat skore
 # udelat new game
@@ -8,26 +9,16 @@
 # spoj pro ruzne vypocty hlavu a vagony do jednoho pole
 import pygame
 import random
-import time
-
-pygame.init()
-height=30
-width=30
-windowW = 840
-windowH = 600
-colors = {"white":pygame.Color(255,255,255),"red":pygame.Color(255,0,0),"blue":pygame.Color(0, 0, 255),"green":pygame.Color(0, 255, 0),"black": pygame.Color(255, 255, 255)}
-pygame.display.set_caption('Had')
-windowClock = pygame.time.Clock()
-window = pygame.display.set_mode((windowW,windowH))
-
+import texty
+from config import colors,window,windowClock
 from sprites import grid, Vagon, Jidlo, Player
+
 
 class Run(object):
     stopped = False
-    height=60
-    width=60
     smer='down'
     speed=3
+    
     def __init__(self):
         self.Main()
     def nastavSmer(self,klavesa):
@@ -45,7 +36,7 @@ class Run(object):
         return random.choices(range(256), k=3)
     def Main(self):
         stopped=False
-        g = grid()
+        t=texty.texty()
         vagonPocet = 0
         uvodniDelka = 2
         vagony = []
@@ -109,10 +100,11 @@ class Run(object):
             vagony[vagonPocet-1].gridy=vagony[len(vagony)-2].gridy
             wait = False
          #check crash
+         #check crash
          for i in range(len(vagony)):
             if vagony[i].gridx  == player1.gridx and vagony[i].gridy == player1.gridy:
-               from texty import texty
-               texty.gameOver(self) 
+                t.gameOver() 
+                
          player1.draw(player1.gridx,player1.gridy,Run.smer) 
          for i in range(len(vagony)):
           vagony[i].draw()            

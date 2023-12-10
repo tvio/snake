@@ -1,4 +1,5 @@
-from main import pygame,height,width,windowH,windowW,window,colors,random
+import random
+from config import pygame,height,width,windowH,windowW,colors,window
 class grid():
    gridx = 0
    gridy = 0
