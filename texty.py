@@ -10,3 +10,4 @@ class texty():
        time.sleep(5)
        pygame.quit()
        quit()
+ 
