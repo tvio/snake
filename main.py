@@ -1,5 +1,5 @@
-# udelat reset game
-#zlepsit mackat aspon dve klavesy
+
+# storage na zmacknute klavesy nebo zpet na keypress nebo co to bylo?
 #chyba pri rychlem sledu kl4aves to konci, i kdyz nenarazil2x
 # udelat skore
 # udelat new game
@@ -15,30 +15,33 @@ from sprites import grid, Vagon, Jidlo, Player
 
 
 class Run(object):
-    stopped = False
-    smer='down'
-    speed=3
     
     def __init__(self):
         self.Main()
+        
+    def reset(self):
+       self.__init__()
     def nastavSmer(self,klavesa):
-       if klavesa=='left' and Run.smer=='right':
+       if klavesa=='left' and self.smer=='right':
           pass
-       elif klavesa=='right' and Run.smer=='left':
+       elif klavesa=='right' and self.smer=='left':
           pass
-       elif klavesa=='up' and Run.smer=='down':
+       elif klavesa=='up' and self.smer=='down':
           pass
-       elif klavesa=='down' and Run.smer=='up':
+       elif klavesa=='down' and self.smer=='up':
           pass
        else:
-          Run.smer=klavesa
+          self.smer=klavesa
     def randomColor(self):
         return random.choices(range(256), k=3)
     def Main(self):
-        stopped=False
         t=texty.texty()
+        stopped = False
+        self.smer = 'down'
+        smer = self.smer
+        speed=10
         vagonPocet = 0
-        uvodniDelka = 2
+        uvodniDelka = 7
         vagony = []
         #generovnai hlavy
         print(colors["red"])
@@ -48,37 +51,41 @@ class Run(object):
            vagonPocet+=1
            vagony.append( Vagon (vagonPocet))
            if vagonPocet==1:
-            vagony[i].nastavSouradnice(player1.gridx,player1.gridy,Run.smer)
+            vagony[i].nastavSouradnice(player1.gridx,player1.gridy,smer)
            else:
-            vagony[i].nastavSouradnice(vagony[i-1].gridx,vagony[i-1].gridy,Run.smer)
+            vagony[i].nastavSouradnice(vagony[i-1].gridx,vagony[i-1].gridy,smer)
         #jidlo = Jidlo(random.randint(0,g.sizex),random.randint(0,g.sizey),self.random_color(),vagony)
         jidlo = Jidlo(player1.gridx,player1.gridy,vagony,self.randomColor())
         wait = False
         pocetCekani = 0
         while stopped == False:
+         smer = self.smer
          window.fill(colors["white"])
          for event in pygame.event.get():
             if event.type == pygame.QUIT:
                pygame.quit()
                quit()
+
             elif event.type == pygame.KEYDOWN:
+               
                if event.key == pygame.K_LEFT :      
                   self.nastavSmer('left')
-                  break
+                  
                if event.key == pygame.K_RIGHT  :
                   self.nastavSmer('right')
-                  break
+                  
                if event.key == pygame.K_UP :
                   self.nastavSmer('up')
-                  break
+                  
                if event.key == pygame.K_DOWN : 
                   self.nastavSmer('down')
-                  break
+                  
+               
          if jidlo.kontrolaKolize(player1.gridx,player1.gridy)==1:
             vagonPocet+=1
             vagony.append( Vagon (vagonPocet))
-            Run.speed+=0.5
-            print(Run.speed)
+            speed+=0.5
+            print(speed)
             window.fill(colors["red"])
             del jidlo
             # negenerovat jidlo do hada
@@ -104,20 +111,25 @@ class Run(object):
          for i in range(len(vagony)):
             if vagony[i].gridx  == player1.gridx and vagony[i].gridy == player1.gridy:
                 t.gameOver() 
-                
-         player1.draw(player1.gridx,player1.gridy,Run.smer) 
+                stopped = True
+                self.reset()
+         player1.draw(player1.gridx,player1.gridy,smer) 
          for i in range(len(vagony)):
           vagony[i].draw()            
          jidlo.drawJidlo()
          pygame.display.update()
-         player1.gridx,player1.gridy,player1.hgridx,player1.hgridy = grid.automove(Run.smer,player1.gridx,player1.gridy)
+         player1.gridx,player1.gridy,player1.hgridx,player1.hgridy = grid.automove(smer,player1.gridx,player1.gridy)
          for i in reversed(range(len(vagony))):
             if i == 0:
               vagony[i].gridx = player1.hgridx
               vagony[i].gridy = player1.hgridy
             else: 
               vagony[i].aktualizujSouradnice(vagony[i-1].gridx,vagony[i-1].gridy)
-         windowClock.tick(Run.speed)
+         windowClock.tick(speed)
 
-Run()
+r = Run()
+while r.stopped == True:
+    del r
+    
+    r = Run()
 

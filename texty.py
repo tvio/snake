@@ -9,6 +9,6 @@ class texty():
        game_over_rect.midtop = grid.transform('souradnice',grid.sizex/2, grid.sizey/4)
        window.blit(text, game_over_rect)
        pygame.display.flip()
-       time.sleep(5)
+       time.sleep(2)
        
  
