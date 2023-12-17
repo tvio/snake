@@ -31,7 +31,8 @@ class Run(object):
        elif klavesa=='down' and self.smer=='up':
           pass
        else:
-          self.smer=klavesa
+         self.smer=klavesa
+         self.zasobnikSmeru.append(klavesa)
     def randomColor(self):
         return random.choices(range(256), k=3)
     def Main(self):
@@ -39,6 +40,8 @@ class Run(object):
         stopped = False
         self.smer = 'down'
         smer = self.smer
+        self.zasobnikSmeru = []
+        
         speed=10
         vagonPocet = 0
         uvodniDelka = 7
@@ -57,16 +60,21 @@ class Run(object):
         #jidlo = Jidlo(random.randint(0,g.sizex),random.randint(0,g.sizey),self.random_color(),vagony)
         jidlo = Jidlo(player1.gridx,player1.gridy,vagony,self.randomColor())
         wait = False
-        pocetCekani = 0
+        
         while stopped == False:
          smer = self.smer
          window.fill(colors["white"])
+         
          for event in pygame.event.get():
+          
             if event.type == pygame.QUIT:
                pygame.quit()
                quit()
-
+           
+               
             elif event.type == pygame.KEYDOWN:
+               if len(self.zasobnikSmeru) == 2:
+                  break
                
                if event.key == pygame.K_LEFT :      
                   self.nastavSmer('left')
@@ -79,8 +87,11 @@ class Run(object):
                   
                if event.key == pygame.K_DOWN : 
                   self.nastavSmer('down')
-                  
-               
+         #musim dat jen jednu klavesu z fronty zmacknutych  do pohybu, aby se nevyhodnotil crash         
+         if len(self.zasobnikSmeru)>0:
+             self.smer = self.zasobnikSmeru[0]
+             del self.zasobnikSmeru[0] 
+         print(self.smer)    
          if jidlo.kontrolaKolize(player1.gridx,player1.gridy)==1:
             vagonPocet+=1
             vagony.append( Vagon (vagonPocet))
