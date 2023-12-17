@@ -8,3 +8,5 @@ colors = {"white":pygame.Color(255,255,255),"red":pygame.Color(255,0,0),"blue":p
 pygame.display.set_caption('Had')
 windowClock = pygame.time.Clock()
 window = pygame.display.set_mode((windowW,windowH))
+p1Control='{"left":"K_LEFT", "right":"K_RIGHT","up":"K_UP","down":"K_DOWN"}'
+p2Control='{"left":"K_a", "right":"K_d","up":"K_w","down":"K_s"}'

@@ -59,18 +59,15 @@ class Player(object):
         self.gridy = gridy
         grid.draw(self.gridx,self.gridy,self.color)
 class Jidlo():
-    def __init__(self,pgridx,pgridy,vagony,color):
+    def __init__(self,pv,color):
          self.color= color
          kolize = True
          while kolize==True:
           kolize=False
           nastrelx =  random.randint(0,grid.sizex) 
           nastrely =  random.randint(0,grid.sizey) 
-          if pgridx == nastrelx and pgridy == nastrely:
-            kolize=True
-            continue
-          for i in range(len(vagony)):             
-             if nastrelx == vagony[i].gridx and nastrely == vagony[i].gridy:
+          for i in range(len(pv)):             
+             if nastrelx == pv[i].gridx and nastrely == pv[i].gridy:
                 kolize=True
          self.gridx = nastrelx
          self.gridy = nastrely
