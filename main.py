@@ -41,7 +41,7 @@ class Run(object):
         self.smer = 'down'
         smer = self.smer
         self.zasobnikSmeru = []
-        
+        score = 0
         speed=10
         vagonPocet = 0
         uvodniDelka = 7
@@ -93,6 +93,7 @@ class Run(object):
              del self.zasobnikSmeru[0] 
          print(self.smer)    
          if jidlo.kontrolaKolize(player1.gridx,player1.gridy)==1:
+            score+=1
             vagonPocet+=1
             vagony.append( Vagon (vagonPocet))
             speed+=0.5
@@ -128,6 +129,7 @@ class Run(object):
          for i in range(len(vagony)):
           vagony[i].draw()            
          jidlo.drawJidlo()
+         t.zobrazScore(score) 
          pygame.display.update()
          player1.gridx,player1.gridy,player1.hgridx,player1.hgridy = grid.automove(smer,player1.gridx,player1.gridy)
          for i in reversed(range(len(vagony))):
@@ -136,6 +138,8 @@ class Run(object):
               vagony[i].gridy = player1.hgridy
             else: 
               vagony[i].aktualizujSouradnice(vagony[i-1].gridx,vagony[i-1].gridy)
+         #zobrazScore
+             
          windowClock.tick(speed)
 
 r = Run()
