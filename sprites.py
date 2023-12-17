@@ -71,9 +71,17 @@ class Jidlo():
                 kolize=True
          self.gridx = nastrelx
          self.gridy = nastrely
-    def kontrolaKolize(self,gridx,gridy):
-        if self.gridx == gridx and self.gridy == gridy:
-          return 1
+    def kontrolaKolize(self,p):
+        if len.p == 1:
+           if self.gridx == p.gridx and self.gridy == p.gridx:
+            return 1
+        elif len.p == 2:
+           if self.gridx == p[0].gridx and self.gridy == p[0].gridy:
+            return 1
+           elif self.gridx == p[1].gridx and self.gridy == p[1].gridy:
+            return 2
+        else:
+         return 3 
     def drawJidlo(self):
         grid.draw(self.gridx,self.gridy, self.color)
 class Vagon():

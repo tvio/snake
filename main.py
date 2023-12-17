@@ -1,4 +1,5 @@
 # udelat srazku s jidlemla player1 + player2, musim protahnout spravneho hada
+# nejd mi udelat if pro setup2 ovladani hadd
 # dat inicializaci do vlastniho file - spousta atributu a hadu, zeremisto 
 # dat uvodniho hada na libovolne souradnice gridu
 # spoj pro ruzne vypocty hlavu a vagony do jednoho pole
@@ -45,7 +46,7 @@ class Run(object):
          smer2 = self.smer2
          self.zasobnikSmeru2 = []
          vagony2 = []
-         vagonyPocet2 = 0
+         vagonPocet2 = 0
         #stejne atributy 
         uvodniDelka = 7
         score = 0
@@ -58,7 +59,7 @@ class Run(object):
         #generovani prvni  vagonu podle uvodni delky player1
         for i in (range (uvodniDelka)):
            vagonPocet1+=1
-           vagony.append( Vagon (vagonPocet1))
+           vagony1.append( Vagon (vagonPocet1))
            if vagonPocet1==1:
             vagony1[i].nastavSouradnice(player1.gridx,player1.gridy,smer1)
            else:
@@ -68,7 +69,7 @@ class Run(object):
         #generovani prvni vagonu podle delky player2
         for i in (range (uvodniDelka)):
            vagonPocet2+=1
-           vagony2.append( Vagon (vagonPocet))
+           vagony2.append( Vagon (vagonPocet2))
            if vagonPocet2==1:
             vagony2[i].nastavSouradnice(player2.gridx,player2.gridy,smer2)
            else:
@@ -102,7 +103,7 @@ class Run(object):
                       self.nastavSmer('up')
                    if event.key == pygame.K_DOWN : 
                       self.nastavSmer('down')
-              if setup==2:
+               ## nejde mi if pro setup2 setup==2:
                   if len(self.zasobnikSmeru2) < 3:
                    if event.key == pygame.K_a :      
                       self.nastavSmer('left')
@@ -113,28 +114,39 @@ class Run(object):
                    if event.key == pygame.K_s : 
                      self.nastavSmer('down')
          #musim dat jen jednu klavesu z fronty zmacknutych  do pohybu, aby se nevyhodnotil crash         
-         if len(self.zasobnikSmeru1>0:
+         if len(self.zasobnikSmeru1>0):
              self.smer1 = self.zasobnikSmeru1[0]
              del self.zasobnikSmeru1[0] 
          if setup==2:
-          if len(self.zasobnikSmeru2>0:
+          if len(self.zasobnikSmeru2)>0:
              self.smer2= self.zasobnikSmeru2[0]
              del self.zasobnikSmeru2[0] 
          if setup == 2:
-         p = player1 + player2;
-         else 
-        
-          
-         if jidlo.kontrolaKolize(p.gridx,p.gridy)==1:
+          p = player1 + player2;
+         else:
+          p = player1
+         ## kontrola kolize pro kazdeho playera, musim vedet komu pridat vagon 
+         ## 1 - player1, 2 - player2, 3- nikdo
+         jakyPlayerKolidoval = 0
+         jakyPlayerKolidoval = jidlo.kontrolaKolize(p)
+         if jakyPlayerKolidoval ==1: 
             score+=1
-            vagonPocet+=1
-            vagony.append( Vagon (vagonPocet))
+            vagonPocet1+=1
+            vagony1.append( Vagon (vagonPocet1))
             speed+=0.5
-            print(speed)
+            window.fill(colors["red"])
+            del jidlo
+         if jakyPlayerKolidoval == 2:
+            score+=1
+            vagonyPocet2+=1
+            vagony2.append( Vagon (vagonPocet2))
+            speed+=0.5
             window.fill(colors["red"])
             del jidlo
             # negenerovat jidlo do hada
-            jidlo = Jidlo(player1.gridx,player1.gridy,vagony, self.randomColor())
+            jidlo = Jidlo(pv,self.randomColor())
+            # cekat na vykresleni, neni lepsi sjednotit atributy do jednhoo  a vyhodnocovat spolecne?
+            # at nemusim psat vsechno pro kazdeho playera...
             if vagonPocet == 1 :
                vagony[0].gridx=player1.gridx
                vagony[0].gridy=player1.gridy
