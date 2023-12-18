@@ -1,3 +1,4 @@
+# prepsat jen na jedny atributy p = p1+=p2, v=v1+v2
 # udelat srazku s jidlemla player1 + player2, musim protahnout spravneho hada
 # nejd mi udelat if pro setup2 ovladani hadd
 # dat inicializaci do vlastniho file - spousta atributu a hadu, zeremisto 
@@ -51,7 +52,10 @@ class Run(object):
         uvodniDelka = 7
         score = 0
         speed=10
-                
+        #vsichni playeri a vagony
+        pv=[]
+        #playeri
+        p=[]
         #generovnai hlavy 1 
         player1 = Player(0,2,colors["red"])
         if setup==2:
@@ -136,6 +140,15 @@ class Run(object):
             speed+=0.5
             window.fill(colors["red"])
             del jidlo
+            jidlo = Jidlo(pv,self.randomColor())
+            if vagonPocet1 == 1 :
+               vagony1[0].gridx=player1.gridx
+               vagony1[0].gridy=player1.gridy
+               vagony1[0].hgridx=player1.hgridx
+               vagony1[0].hgridy=player1.hgridy
+            else:
+             wait = True
+             pocetCekani = vagonPocet1
          if jakyPlayerKolidoval == 2:
             score+=1
             vagonyPocet2+=1
@@ -147,49 +160,80 @@ class Run(object):
             jidlo = Jidlo(pv,self.randomColor())
             # cekat na vykresleni, neni lepsi sjednotit atributy do jednhoo  a vyhodnocovat spolecne?
             # at nemusim psat vsechno pro kazdeho playera...
-            if vagonPocet == 1 :
-               vagony[0].gridx=player1.gridx
-               vagony[0].gridy=player1.gridy
-               vagony[0].hgridx=player1.hgridx
-               vagony[0].hgridy=player1.hgridy
+            if vagonPocet2 == 1 :
+               vagony2[0].gridx=player1.gridx
+               vagony2[0].gridy=player1.gridy
+               vagony2[0].hgridx=player1.hgridx
+               vagony2[0].hgridy=player1.hgridy
             else:
              wait = True
-             pocetCekani = vagonPocet
+             pocetCekani = vagonPocet2
          else:
              window.fill(colors["white"])
          if wait:
           pocetCekani-=1
           if pocetCekani==0:
-            vagony[vagonPocet-1].gridx=vagony[len(vagony)-2].gridx
-            vagony[vagonPocet-1].gridy=vagony[len(vagony)-2].gridy
+            if jakyPlayerKolidoval==1:
+             vagony1[vagonPocet1-1].gridx=vagony1[len(vagony1)-2].gridx
+             vagony1[vagonPocet1-1].gridy=vagony1[len(vagony1)-2].gridy
+            elif jakyPlayerKolidoval==2:
+             vagony2[vagonPocet1-1].gridx=vagony2[len(vagony2)-2].gridx
+             vagony2[vagonPocet1-1].gridy=vagony2[len(vagony2)-2].gridy
             wait = False
          #check crash
          #check crash
-         for i in range(len(vagony)):
-            if vagony[i].gridx  == player1.gridx and vagony[i].gridy == player1.gridy:
+         p1v = player1+vagony1
+         if setup==1:
+          for i in range(len(vagony1)):
+            if vagony1[i].gridx  == player1.gridx and vagony1[i].gridy == player1.gridy:
                 t.gameOver() 
                 stopped = True
                 self.reset()
-         player1.draw(player1.gridx,player1.gridy,smer) 
-         for i in range(len(vagony)):
-          vagony[i].draw()            
+
+         elif setup==2:
+           p2v = player2+vagony2
+           p2v1v2 = p2v+vagony1
+           p1v1v2 = p1v+vagony2
+           for i in range(len(p2v1v2)):
+             if player1.gridx ==  p2v1v2.gridx and player1.gridy == p2v1v2.gridy:
+               t.gameOver() 
+               stopped = True
+               self.reset()
+           for i in range(len(p1v1v2)):
+              if player2.gridx ==  p1v1v2.gridx and player2.gridy == p1v1v2.gridy:
+               t.gameOver() 
+               stopped = True
+               self.reset()        
+                   
+         player1.draw(player1.gridx,player1.gridy,smer1) 
+         player2.draw(player1.gridx,player1.gridy,smer1) 
+         v=vagony1+vagony2
+         for i in range(len(v)):
+          v[i].draw()            
          jidlo.drawJidlo()
          t.zobrazScore(score) 
          pygame.display.update()
-         player1.gridx,player1.gridy,player1.hgridx,player1.hgridy = grid.automove(smer,player1.gridx,player1.gridy)
-         for i in reversed(range(len(vagony))):
+         player1.gridx,player1.gridy,player1.hgridx,player1.hgridy = grid.automove(smer1,player1.gridx,player1.gridy)
+         for i in reversed(range(len(vagony1))):
             if i == 0:
-              vagony[i].gridx = player1.hgridx
-              vagony[i].gridy = player1.hgridy
+              vagony1[i].gridx = player1.hgridx
+              vagony1[i].gridy = player1.hgridy
             else: 
-              vagony[i].aktualizujSouradnice(vagony[i-1].gridx,vagony[i-1].gridy)
-         #zobrazScore
+              vagony1[i].aktualizujSouradnice(vagony1[i-1].gridx,vagony1[i-1].gridy)
+         if setup==2:
+          player2.gridx,player2.gridy,player2.hgridx,player2.hgridy = grid.automove(smer2,player2.gridx,player2.gridy)
+          for i in reversed(range(len(vagony2))):
+            if i == 0:
+              vagony2[i].gridx = player2.hgridx
+              vagony2[i].gridy = player2.hgridy
+            else: 
+              vagony2[i].aktualizujSouradnice(vagony2[i-1].gridx,vagony2[i-1].gridy)
+        
              
          windowClock.tick(speed)
 
 r = Run()
-while r.stopped == True:
-    del r
-    
-    r = Run()
+#while r.stopped == True:
+#    del r
+#    r = Run()
 
