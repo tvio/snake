@@ -83,7 +83,10 @@ class Run(object):
          pv = player1+vagony2
          jidlo = Jidlo(pv,self.randomColor())
         elif setup == 2:
-           pv=player1+vagony1+player2+vagony2
+           
+           p.append(player1)
+           p.append(player2)
+           pv=p+vagony1+vagony2
            jidlo = Jidlo(pv,self.randomColor())
         wait = False
         
@@ -118,7 +121,7 @@ class Run(object):
                    if event.key == pygame.K_s : 
                      self.nastavSmer('down')
          #musim dat jen jednu klavesu z fronty zmacknutych  do pohybu, aby se nevyhodnotil crash         
-         if len(self.zasobnikSmeru1>0):
+         if len(self.zasobnikSmeru1)>0:
              self.smer1 = self.zasobnikSmeru1[0]
              del self.zasobnikSmeru1[0] 
          if setup==2:
@@ -126,9 +129,10 @@ class Run(object):
              self.smer2= self.zasobnikSmeru2[0]
              del self.zasobnikSmeru2[0] 
          if setup == 2:
-          p = player1 + player2;
+          pass
          else:
-          p = player1
+          p = []
+          p.append(player1)
          ## kontrola kolize pro kazdeho playera, musim vedet komu pridat vagon 
          ## 1 - player1, 2 - player2, 3- nikdo
          jakyPlayerKolidoval = 0
@@ -182,7 +186,7 @@ class Run(object):
             wait = False
          #check crash
          #check crash
-         p1v = player1+vagony1
+         p1v = vagony1.append(player1)
          if setup==1:
           for i in range(len(vagony1)):
             if vagony1[i].gridx  == player1.gridx and vagony1[i].gridy == player1.gridy:

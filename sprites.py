@@ -45,7 +45,7 @@ class grid():
          else:
            grid.gridx+=-1    
        return(grid.gridx,grid.gridy,pgridx,pgridy)
-class Player(object):
+class Player():
     def __init__(self,gridx,gridy, color):
           self.gridx = gridx
           self.gridy = gridy
@@ -72,10 +72,10 @@ class Jidlo():
          self.gridx = nastrelx
          self.gridy = nastrely
     def kontrolaKolize(self,p):
-        if len.p == 1:
+        if len(p) == 1:
            if self.gridx == p.gridx and self.gridy == p.gridx:
             return 1
-        elif len.p == 2:
+        elif len(p) == 2:
            if self.gridx == p[0].gridx and self.gridy == p[0].gridy:
             return 1
            elif self.gridx == p[1].gridx and self.gridy == p[1].gridy:
