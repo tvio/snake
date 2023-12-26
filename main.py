@@ -9,7 +9,7 @@ import pygame
 from watchpoints import watch
 import random
 import texty
-from config import colors,window,windowClock,p1Control,p2Control
+from config import colors,window,windowClock
 from sprites import grid, Vagon, Jidlo, Player
 
 
@@ -39,6 +39,7 @@ class Run(object):
     def randomColor(self):
         return random.choices(range(256), k=3)
     def Main(self):
+        speed=2
         setup=2
         t=texty.texty()
         stopped = False
@@ -54,7 +55,6 @@ class Run(object):
         #stejne atributy 
         uvodniDelka = 7
         score = 0
-        speed=10
         #vsichni playeri a vagony
         #playeri s vagonama
         p,pv,p2v1v2,p1v1v2=[],[],[],[]
@@ -70,8 +70,8 @@ class Run(object):
             vagony1[i].nastavSouradnice(player1.gridx,player1.gridy,self.smer1)
            else:
             vagony1[i].nastavSouradnice(vagony1[i-1].gridx,vagony1[i-1].gridy,self.smer1)
-        if setup == 2:
-            player1 = Player(0,2,colors["red"])
+        #if setup == 2:
+        #    player1 = Player(0,2,colors["red"])
         #generovani prvni vagonu podle delky player2
         for i in (range (uvodniDelka)):
            vagonPocet2+=1
