@@ -1,3 +1,4 @@
+#kontrola kolize pro 2player , hned konec
 # prepsat jen na jedny atributy p = p1+=p2, v=v1+v2
 # udelat srazku s jidlemla player1 + player2, musim protahnout spravneho hada
 # nejd mi udelat if pro setup2 ovladani hadd
@@ -5,6 +6,7 @@
 # dat uvodniho hada na libovolne souradnice gridu
 # spoj pro ruzne vypocty hlavu a vagony do jednoho pole
 import pygame
+from watchpoints import watch
 import random
 import texty
 from config import colors,window,windowClock,p1Control,p2Control
@@ -18,33 +20,34 @@ class Run(object):
         
     def reset(self):
        self.__init__()
-    def nastavSmer(self,klavesa):
-       if klavesa=='left' and self.smer=='right':
+    def nastavSmer(self,klavesa,player,smer):
+       if klavesa=='left' and smer=='right':
           pass
-       elif klavesa=='right' and self.smer=='left':
+       elif klavesa=='right' and smer=='left':
           pass
-       elif klavesa=='up' and self.smer=='down':
+       elif klavesa=='up' and smer=='down':
           pass
-       elif klavesa=='down' and self.smer=='up':
+       elif klavesa=='down' and smer=='up':
           pass
        else:
-         self.smer1=klavesa
-         self.zasobnikSmeru1.append(klavesa)
+         if player==1:
+          self.smer1=klavesa
+          self.zasobnikSmeru1.append(klavesa)
+         elif player==2:
+          self.smer2=klavesa
+          self.zasobnikSmeru2.append(klavesa)
     def randomColor(self):
         return random.choices(range(256), k=3)
     def Main(self):
         setup=2
         t=texty.texty()
         stopped = False
-        
         self.smer1 = 'down'
-        smer1 = self.smer1
         self.zasobnikSmeru1 = []
         vagony1 = []
         vagonPocet1 = 0
         if setup==2:
          self.smer2 = 'up'
-         smer2 = self.smer2
          self.zasobnikSmeru2 = []
          vagony2 = []
          vagonPocet2 = 0
@@ -53,11 +56,10 @@ class Run(object):
         score = 0
         speed=10
         #vsichni playeri a vagony
-        pv=[]
-        #playeri
-        p=[]
+        #playeri s vagonama
+        p,pv,p2v1v2,p1v1v2=[],[],[],[]
         #generovnai hlavy 1 
-        player1 = Player(0,2,colors["red"])
+        player1 = Player(0,2,colors["blue"])
         if setup==2:
          player2 = Player(grid.sizex,grid.sizey-3,colors["green"])
         #generovani prvni  vagonu podle uvodni delky player1
@@ -65,9 +67,9 @@ class Run(object):
            vagonPocet1+=1
            vagony1.append( Vagon (vagonPocet1))
            if vagonPocet1==1:
-            vagony1[i].nastavSouradnice(player1.gridx,player1.gridy,smer1)
+            vagony1[i].nastavSouradnice(player1.gridx,player1.gridy,self.smer1)
            else:
-            vagony1[i].nastavSouradnice(vagony1[i-1].gridx,vagony1[i-1].gridy,smer1)
+            vagony1[i].nastavSouradnice(vagony1[i-1].gridx,vagony1[i-1].gridy,self.smer1)
         if setup == 2:
             player1 = Player(0,2,colors["red"])
         #generovani prvni vagonu podle delky player2
@@ -75,25 +77,22 @@ class Run(object):
            vagonPocet2+=1
            vagony2.append( Vagon (vagonPocet2))
            if vagonPocet2==1:
-            vagony2[i].nastavSouradnice(player2.gridx,player2.gridy,smer2)
+            vagony2[i].nastavSouradnice(player2.gridx,player2.gridy,self.smer2)
            else:
-            vagony2[i].nastavSouradnice(vagony2[i-1].gridx,vagony2[i-1].gridy,smer2)
+            vagony2[i].nastavSouradnice(vagony2[i-1].gridx,vagony2[i-1].gridy,self.smer2)
         #jidlo = Jidlo(random.randint(0,g.sizex),random.randint(0,g.sizey),self.random_color(),vagony)
         if setup ==1:
-         pv = player1+vagony2
+         pv = vagony1
+         pv.append(player1)
          jidlo = Jidlo(pv,self.randomColor())
         elif setup == 2:
-           
-           p.append(player1)
-           p.append(player2)
-           pv=p+vagony1+vagony2
+           pv=vagony1+vagony2
+           pv.append(player1)
+           pv.append(player2)
            jidlo = Jidlo(pv,self.randomColor())
         wait = False
-        
+        #smyscka nepridat do poli 
         while stopped == False:
-         smer1= self.smer1
-         if setup == 2:
-            smer2 = self.smer2
          window.fill(colors["white"])
          for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -103,23 +102,23 @@ class Run(object):
              
                   if len(self.zasobnikSmeru1) < 3:
                    if event.key == pygame.K_LEFT :      
-                      self.nastavSmer('left')
+                      self.nastavSmer('left',1,self.smer1)
                    if event.key == pygame.K_RIGHT  :
-                      self.nastavSmer('right')
+                      self.nastavSmer('right',1,self.smer1)
                    if event.key == pygame.K_UP :
-                      self.nastavSmer('up')
+                      self.nastavSmer('up',1,self.smer1)
                    if event.key == pygame.K_DOWN : 
-                      self.nastavSmer('down')
+                      self.nastavSmer('down',1,self.smer1)
                ## nejde mi if pro setup2 setup==2:
                   if len(self.zasobnikSmeru2) < 3:
                    if event.key == pygame.K_a :      
-                      self.nastavSmer('left')
+                      self.nastavSmer('left',2,self.smer2)
                    if event.key == pygame.K_d  :
-                      self.nastavSmer('right')
+                      self.nastavSmer('right',2,self.smer2)
                    if event.key == pygame.K_w :
-                      self.nastavSmer('up')
+                      self.nastavSmer('up',2,self.smer2)
                    if event.key == pygame.K_s : 
-                     self.nastavSmer('down')
+                     self.nastavSmer('down',2,self.smer2)
          #musim dat jen jednu klavesu z fronty zmacknutych  do pohybu, aby se nevyhodnotil crash         
          if len(self.zasobnikSmeru1)>0:
              self.smer1 = self.zasobnikSmeru1[0]
@@ -128,14 +127,13 @@ class Run(object):
           if len(self.zasobnikSmeru2)>0:
              self.smer2= self.zasobnikSmeru2[0]
              del self.zasobnikSmeru2[0] 
-         if setup == 2:
-          pass
-         else:
-          p = []
-          p.append(player1)
          ## kontrola kolize pro kazdeho playera, musim vedet komu pridat vagon 
+         p=[]
+         p.append(player1)
+         if setup==2:
+           p.append(player2)
          ## 1 - player1, 2 - player2, 3- nikdo
-         jakyPlayerKolidoval = 0
+         jakyPlayerKolidoval = 3
          jakyPlayerKolidoval = jidlo.kontrolaKolize(p)
          if jakyPlayerKolidoval ==1: 
             score+=1
@@ -155,7 +153,7 @@ class Run(object):
              pocetCekani = vagonPocet1
          if jakyPlayerKolidoval == 2:
             score+=1
-            vagonyPocet2+=1
+            vagonPocet2+=1
             vagony2.append( Vagon (vagonPocet2))
             speed+=0.5
             window.fill(colors["red"])
@@ -186,38 +184,38 @@ class Run(object):
             wait = False
          #check crash
          #check crash
-         p1v = vagony1.append(player1)
          if setup==1:
           for i in range(len(vagony1)):
             if vagony1[i].gridx  == player1.gridx and vagony1[i].gridy == player1.gridy:
                 t.gameOver() 
                 stopped = True
                 self.reset()
-
+         #nejde kontrola kolize pro 2player, hned ukonci  
          elif setup==2:
-           p2v = player2+vagony2
-           p2v1v2 = p2v+vagony1
-           p1v1v2 = p1v+vagony2
-           for i in range(len(p2v1v2)):
-             if player1.gridx ==  p2v1v2.gridx and player1.gridy == p2v1v2.gridy:
+           p2v1v2 = vagony2 + vagony1
+           p2v1v2.append(player2)
+           p1v1v2= vagony1 + vagony2
+           p1v1v2.append(player1)
+           for i in range(len(p2v1v2)-1):
+             if player1.gridx == p2v1v2[i].gridx and player1.gridy == p2v1v2[i].gridy:
                t.gameOver() 
                stopped = True
                self.reset()
-           for i in range(len(p1v1v2)):
-              if player2.gridx ==  p1v1v2.gridx and player2.gridy == p1v1v2.gridy:
+           for i in range(len(p1v1v2)-1):
+              if player2.gridx ==  p1v1v2[i].gridx and player2.gridy == p1v1v2[i].gridy:
                t.gameOver() 
                stopped = True
                self.reset()        
                    
-         player1.draw(player1.gridx,player1.gridy,smer1) 
-         player2.draw(player1.gridx,player1.gridy,smer1) 
+         player1.draw(player1.gridx,player1.gridy,self.smer1) 
+         player2.draw(player2.gridx,player2.gridy,self.smer2) 
          v=vagony1+vagony2
          for i in range(len(v)):
           v[i].draw()            
          jidlo.drawJidlo()
          t.zobrazScore(score) 
          pygame.display.update()
-         player1.gridx,player1.gridy,player1.hgridx,player1.hgridy = grid.automove(smer1,player1.gridx,player1.gridy)
+         player1.gridx,player1.gridy,player1.hgridx,player1.hgridy = grid.automove(self.smer1,player1.gridx,player1.gridy)
          for i in reversed(range(len(vagony1))):
             if i == 0:
               vagony1[i].gridx = player1.hgridx
@@ -225,7 +223,7 @@ class Run(object):
             else: 
               vagony1[i].aktualizujSouradnice(vagony1[i-1].gridx,vagony1[i-1].gridy)
          if setup==2:
-          player2.gridx,player2.gridy,player2.hgridx,player2.hgridy = grid.automove(smer2,player2.gridx,player2.gridy)
+          player2.gridx,player2.gridy,player2.hgridx,player2.hgridy = grid.automove(self.smer2,player2.gridx,player2.gridy)
           for i in reversed(range(len(vagony2))):
             if i == 0:
               vagony2[i].gridx = player2.hgridx
