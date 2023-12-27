@@ -6,7 +6,7 @@
 # dat uvodniho hada na libovolne souradnice gridu
 # spoj pro ruzne vypocty hlavu a vagony do jednoho pole
 import pygame
-from watchpoints import watch
+#from watchpoints import watch
 import random
 import texty
 from config import colors,window,windowClock
@@ -39,7 +39,7 @@ class Run(object):
     def randomColor(self):
         return random.choices(range(256), k=3)
     def Main(self):
-        speed=2
+        speed=5
         setup=2
         t=texty.texty()
         stopped = False

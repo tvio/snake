@@ -1,5 +1,7 @@
 import pygame
 pygame.init()
+pygame.mixer.init()
+s = 'sound'
 #print(pygame.font.get_fonts())
 
 v1 = [1,3,4,5]
