@@ -1,0 +1,11 @@
+[project]
+name = "snake"
+version = "0.1.0"
+description = "Snake game built with pygame"
+requires-python = ">=3.8"
+dependencies = [
+    "pygame",
+]
+
+[tool.uv]
+package = false

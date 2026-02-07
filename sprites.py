@@ -3,8 +3,8 @@ from config import pygame,height,width,windowH,windowW,colors,window
 class grid():
    gridx = 0
    gridy = 0
-   sizex = windowW /width-1
-   sizey = windowH/height-1
+   sizex = int(windowW /width-1)
+   sizey = int(windowH/height-1)
    @staticmethod
    def transform(kam,px,py):
     if kam=='grid':
